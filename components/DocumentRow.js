@@ -1,9 +1,8 @@
 import Button from "@material-tailwind/react/Button";
 import Icon from "@material-tailwind/react/Icon";
-import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
 
-function DocumentRow({ id, fileName, date }) {
+function DocumentRow({ id, fileName, date, onDelete }) {
   return (
     <Link href={`/doc/${id}`}>
       <a>
@@ -19,8 +18,12 @@ function DocumentRow({ id, fileName, date }) {
             iconOnly={true}
             ripple="dark"
             className="border-0"
+            onClick={(event) => {
+              event.preventDefault();
+              onDelete(id);
+            }}
           >
-            <Icon name="more_vert" size="3xl" />
+            <Icon name="delete" size="3xl" color="red" />
           </Button>
         </div>
       </a>

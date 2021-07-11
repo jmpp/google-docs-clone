@@ -13,7 +13,7 @@ import DocumentRow from "../components/DocumentRow";
 import { getSession, useSession } from "next-auth/client";
 import { useState } from "react";
 import { db } from "../firebase";
-import { useCollectionOnce } from "react-firebase-hooks/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 export default function Home() {
   const [session] = useSession(); // Fonctionne grâce au <Provider> dans "_app.js"
@@ -21,7 +21,7 @@ export default function Home() {
 
   const [showModal, setShowModal] = useState(false);
   const [input, setInput] = useState("");
-  const [snapshot] = useCollectionOnce(
+  const [snapshot] = useCollection(
     db
       .collection("userDocs")
       .doc(session.user.email)
@@ -39,6 +39,14 @@ export default function Home() {
 
     setInput("");
     setShowModal(false);
+  }
+
+  function deleteDocument(id) {
+    db.collection("userDocs")
+      .doc(session.user.email)
+      .collection("docs")
+      .doc(id)
+      .delete();
   }
 
   const modal = (
@@ -127,6 +135,7 @@ export default function Home() {
               id={doc.id}
               fileName={doc.data().fileName}
               date={doc.data().timestamp}
+              onDelete={deleteDocument}
             />
           ))}
         </div>
